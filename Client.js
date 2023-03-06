@@ -1,4 +1,5 @@
 const WebSocket = require("ws");
+const { EmbedBuilder } = require("./EmbedBuilder.js");
 
 class DiscordBot {
   constructor(token) {
@@ -68,6 +69,10 @@ class DiscordBot {
         default:
           console.log("Unhandled operation:", data.op);
       }
+
+      // reply
+      if (data.t === "MESSAGE_CREATE") {
+      }
     });
 
     this.websocket.on("close", (code, reason) => {
@@ -84,23 +89,67 @@ class DiscordBot {
   }
 
   // Reply to a message
-  replyToMessage(channelId, content) {
-    this.websocket.send(
-      JSON.stringify({
-        op: 0,
-        d: {
-          type: 1,
-          data: {
-            content,
-            tts: false,
-          },
-          channel_id: channelId,
+  async sendEmbed(guildId, channelId, embedData) {
+    //
+    const response = await fetch(
+      `https://discord.com/api/v9/channels/${channelId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bot ${this.token}`,
+          "Content-Type": "application/json",
         },
-      })
+        body: JSON.stringify({
+          embed: embedData,
+        }),
+      }
     );
+
+    const data = await response.json();
+
+    return data;
+  }
+
+  async sendMessage(guildId, channelId, message) {
+    const response = await fetch(
+      `https://discord.com/api/v9/channels/${channelId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bot ${this.token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: message,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  }
+
+  // Delete a Message
+  async deleteMessage(guildId, channelId, messageId) {
+    const response = await fetch(
+      `https://discord.com/api/v9/channels/${channelId}/messages/${messageId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bot ${this.token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
   }
 }
 
 module.exports = {
   DiscordBot,
+  EmbedBuilder,
 };

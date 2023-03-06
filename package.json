@@ -1,13 +1,21 @@
 {
   "name": "easydisbot.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Simple and flexible discord bot framework for node.js",
   "main": "Client.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "discord-api",
+    "discord-bot",
+    "javascript"
+  ],
   "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/latze05/easydisbot-js.git"
+  },
   "license": "ISC",
   "dependencies": {
     "easydisbot.js": "^0.0.4",
